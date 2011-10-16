@@ -1,0 +1,11 @@
+auto-save-list/
+auto-save-list/*
+backups/
+elpa/
+passwords.el
+places
+.emacs.desktop
+.smex-items
+ac-comphist.dat
+tfs-settings.el
+*~
