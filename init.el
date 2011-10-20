@@ -55,6 +55,9 @@
 ;; XML Mode TODO:NXML
 (add-to-list 'auto-mode-alist '("\\.config\\'" . xml-mode))
 
+;; Mustache Mode! https://github.com/mustache/emacs
+(require 'mustache-mode)
+
 ;; Spell Check - Aspell
 (setq-default ispell-program-name "C:\\Program Files (x86)\\Aspell\\bin\\aspell.exe")
 (setq text-mode-hook '(lambda()
