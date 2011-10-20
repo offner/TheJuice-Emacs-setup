@@ -80,6 +80,8 @@
 (desktop-save-mode 1)
 (delete-selection-mode 1)
 (global-hi-lock-mode 1)
+;; Show whitespace, remove on save
 (setq-default show-trailing-whitespace 1)
+(add-hook 'before-save-hook 'delete-trailing-whitespace)
 (global-linum-mode 1)
 (setq whitespace-line-column 250) ;; Disables annoying 80 column font-lock in starter kit
