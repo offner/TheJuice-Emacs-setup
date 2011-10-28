@@ -8,7 +8,6 @@
           (define-key js-mode-map "\C-cc" 'comment-or-uncomment-region)
           (add-hook 'js-mode-hook 'esk-paredit-nonlisp)
           (setq js-indent-level 2)
-          ;; fixes problem with pretty function font-lock
           (font-lock-add-keywords
            'js-mode `(("\\(function *\\)("
               (0 (progn (compose-region (match-beginning 1)

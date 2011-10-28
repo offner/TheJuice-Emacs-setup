@@ -1,3 +1,4 @@
+(require 'cl)
 ;; Set file for customize
 (setq custom-file "~/.emacs.d/customizations.el")
      (load custom-file)
@@ -12,7 +13,7 @@
 (when (not package-archive-contents)
   (package-refresh-contents))
 
-(defvar my-packages '(starter-kit starter-kit-bindings starter-kit-eshell auto-complete)
+(defvar my-packages '(starter-kit starter-kit-eshell auto-complete)
   "A list of packages to ensure are installed at launch.")
 
 (dolist (p my-packages)
@@ -87,4 +88,4 @@
 (setq-default show-trailing-whitespace 1)
 (add-hook 'before-save-hook 'delete-trailing-whitespace)
 (global-linum-mode 1)
-(setq whitespace-line-column 250) ;; Disables annoying 80 column font-lock in starter kit
+(setq whitespace-line-column nil) ;; Disables annoying 80 column font-lock in starter kit
