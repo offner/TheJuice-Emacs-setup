@@ -1,7 +1,4 @@
 (require 'cl)
-;; Set file for customize
-(setq custom-file "~/.emacs.d/customizations.el")
-     (load custom-file)
 
 ;; Load Marmalade Package Manager
 (require 'package)
@@ -13,7 +10,9 @@
 (when (not package-archive-contents)
   (package-refresh-contents))
 
-(defvar my-packages '(starter-kit starter-kit-eshell auto-complete)
+(defvar my-packages '(starter-kit-eshell auto-complete paredit
+  idle-highlight-mode find-file-in-project smex ido-ubiquitous magit yasnippet
+   solarized-theme exec-path-from-shell flymake-cursor)
   "A list of packages to ensure are installed at launch.")
 
 (dolist (p my-packages)
@@ -24,14 +23,30 @@
 (add-to-list 'load-path "~/.emacs.d/")
 (add-to-list 'load-path "~/.emacs.d/vendor/")
 
+;; Setup Path
+(when (memq window-system '(mac ns))
+  (exec-path-from-shell-initialize))
+
 ;; Theme / Font
-(add-to-list 'load-path "~/.emacs.d/themes/solarized/")
-(add-to-list 'custom-theme-load-path "~/.emacs.d/themes/solarized/")
-(set-frame-font "Ubuntu Mono-12")
-(load-theme 'solarized-dark)
+;;(add-to-list 'load-path "~/.emacs.d/themes/solarized/")
+;;(add-to-list 'custom-theme-load-path "~/.emacs.d/themes/solarized/")
+(set-frame-font "Monaco-14")
+;;(load-theme 'solarized-light)
 
 ;; JS Dev settings : Load improved js2-mode : https://github.com/mooz/js2-mode
 (require 'js-settings)
+
+
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(custom-enabled-themes (quote (solarized-light)))
+ '(custom-safe-themes (quote ("72cc9ae08503b8e977801c6d6ec17043b55313cda34bcf0e6921f2f04cf2da56" "d2622a2a2966905a5237b54f35996ca6fda2f79a9253d44793cfe31079e3c92b" "117284df029007a8012cae1f01c3156d54a0de4b9f2f381feab47809b8a1caef" "5debeb813b180bd1c3756306cd8c83ac60fda55f85fb27249a0f2d55817e3cab" default)))
+ '(help-at-pt-display-when-idle (quote (flymake-overlay)) nil (help-at-pt))
+ '(help-at-pt-timer-delay 0.9))
+
 
 ;; emacs-nav http://code.google.com/p/emacs-nav
 (require 'nav)
@@ -53,14 +68,22 @@
 (define-key ac-complete-mode-map "\C-n" 'ac-next) ;;keybind
 (define-key ac-complete-mode-map "\C-p" 'ac-previous) ;;keybind
 
-;; XML Mode TODO:NXML
-(add-to-list 'auto-mode-alist '("\\.config\\'" . xml-mode))
+;; YASnippet
+(require 'yasnippet)
+(yas/initialize)
+;; Load the snippet files themselves
+(yas/load-directory "~/.emacs.d/elpa/yasnippet-0.6.1/snippets/text-mode")
+;; Let's have snippets in the auto-complete dropdown
+(add-to-list 'ac-sources 'ac-source-yasnippet)
+
+;; Set nxml-mode for .config files
+(add-to-list 'auto-mode-alist '("\\.config\\'" . nxml-mode))
 
 ;; Mustache Mode! https://github.com/mustache/emacs
 (require 'mustache-mode)
 
 ;; Spell Check - Aspell
-(setq-default ispell-program-name "C:\\Program Files (x86)\\Aspell\\bin\\aspell.exe")
+;;(setq-default ispell-program-name "C:\\Program Files (x86)\\Aspell\\bin\\aspell.exe")
 (setq text-mode-hook '(lambda()
                         (flyspell-mode t)       ; spellchek (sic) on the fly
                         ))
@@ -87,5 +110,24 @@
 ;; Show whitespace, remove on save
 (setq-default show-trailing-whitespace 1)
 (add-hook 'before-save-hook 'delete-trailing-whitespace)
-(global-linum-mode 1)
+;;(global-linum-mode 0)
+;;(setq linum-format "%3d")
 (setq whitespace-line-column nil) ;; Disables annoying 80 column font-lock in starter kit
+(setq visible-bell nil)
+(setq ring-bell-function #'ignore)
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ )
+
+;; Smooth scrolling
+(setq redisplay-dont-pause t
+  scroll-margin 1
+  scroll-step 1
+  scroll-conservatively 10000
+  scroll-preserve-screen-position 1)
+(setq mouse-wheel-scroll-amount '(1 ((shift) . 1))) ;; one line at a time
+(setq mouse-wheel-progressive-speed nil) ;; don't accelerate scrolling
+;;(setq mouse-wheel-follow-mouse 't) ;; scroll window under mouse
