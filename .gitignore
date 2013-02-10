@@ -9,3 +9,5 @@ places
 ac-comphist.dat
 tfs-settings.el
 *~
+.emacs*
+url/
