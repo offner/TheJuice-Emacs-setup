@@ -64,17 +64,11 @@
 (require 'go-autocomplete)
 (eval-after-load "go-mode"
   '(progn
-		 (setq tab-width 4)
-     ;;(setq indent-tabs-mode t)
-		 (setq c-indent-level 1)
-     (setq tab-width 2)
-		;; (add-hook 'before-save-hook 'gofmt-before-save)
-		 (setq tab-width 2 indent-tabs-mode 1)
+		 (setq c-indent-level 2)
      (require 'auto-complete-config)))
 
 (defun my-go-mode-hook ()
-  ;;(add-hook 'before-save-hook 'gofmt-before-save))
-  (setq tab-width 2 indent-tabs-mode 1))
+  (setq tab-width 4 indent-tabs-mode 1))
 (add-hook 'go-mode-hook 'my-go-mode-hook)
 
 ;; Auto Complete
