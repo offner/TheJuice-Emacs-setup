@@ -12,7 +12,7 @@
 
 (defvar my-packages '(starter-kit-eshell auto-complete paredit
   idle-highlight-mode find-file-in-project smex ido-ubiquitous magit yasnippet
-   solarized-theme exec-path-from-shell flymake-cursor)
+   solarized-theme exec-path-from-shell flymake-cursor go-mode)
   "A list of packages to ensure are installed at launch.")
 
 (dolist (p my-packages)
@@ -22,6 +22,7 @@
 ;; Startup Directories
 (add-to-list 'load-path "~/.emacs.d/")
 (add-to-list 'load-path "~/.emacs.d/vendor/")
+(add-to-list 'load-path "~/.emacs.d/vendor/gocode/emacs")
 
 ;; Setup Path
 (when (memq window-system '(mac ns))
@@ -30,7 +31,7 @@
 ;; Theme / Font
 ;;(add-to-list 'load-path "~/.emacs.d/themes/solarized/")
 ;;(add-to-list 'custom-theme-load-path "~/.emacs.d/themes/solarized/")
-(set-frame-font "Monaco-14")
+(set-frame-font "Monaco-16")
 ;;(load-theme 'solarized-light)
 
 ;; JS Dev settings : Load improved js2-mode : https://github.com/mooz/js2-mode
@@ -58,6 +59,23 @@
 (global-set-key "\C-ca" 'org-agenda);;keybind
 (global-set-key "\C-cb" 'org-iswitchb);;keybind
 
+;; go
+(require 'go-mode-load)
+(require 'go-autocomplete)
+(eval-after-load "go-mode"
+  '(progn
+		 (setq tab-width 4)
+     ;;(setq indent-tabs-mode t)
+		 (setq c-indent-level 1)
+     (setq tab-width 2)
+		;; (add-hook 'before-save-hook 'gofmt-before-save)
+		 (setq tab-width 2 indent-tabs-mode 1)
+     (require 'auto-complete-config)))
+
+(defun my-go-mode-hook ()
+  ;;(add-hook 'before-save-hook 'gofmt-before-save))
+  (setq tab-width 2 indent-tabs-mode 1))
+(add-hook 'go-mode-hook 'my-go-mode-hook)
 
 ;; Auto Complete
 (require 'auto-complete-config)
@@ -65,6 +83,7 @@
 (global-auto-complete-mode t)
 (setq ac-auto-start 2)
 (setq ac-ignore-case nil)
+(setq ac-sources (append ac-sources '(ac-source-go)))
 (define-key ac-complete-mode-map "\C-n" 'ac-next) ;;keybind
 (define-key ac-complete-mode-map "\C-p" 'ac-previous) ;;keybind
 
@@ -113,8 +132,7 @@
 ;;(global-linum-mode 0)
 ;;(setq linum-format "%3d")
 (setq whitespace-line-column nil) ;; Disables annoying 80 column font-lock in starter kit
-(setq visible-bell nil)
-(setq ring-bell-function #'ignore)
+(setq ring-bell-function 'ignore)
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
