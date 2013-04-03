@@ -12,7 +12,7 @@
 
 ;; Lintnode setup
 (add-to-list 'load-path "~/Repositories/lintnode")
-(require 'flymake-jslint)
+;;(require 'flymake-jslint)
 (defadvice flymake-post-syntax-check (before flymake-force-check-was-interrupted)
     (setq flymake-check-was-interrupted t))
 (ad-activate 'flymake-post-syntax-check)

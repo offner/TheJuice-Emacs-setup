@@ -12,7 +12,7 @@
 
 (defvar my-packages '(starter-kit-eshell auto-complete paredit
   idle-highlight-mode find-file-in-project smex ido-ubiquitous magit yasnippet
-   solarized-theme exec-path-from-shell flymake-cursor go-mode)
+   solarized-theme exec-path-from-shell flymake-jslint flymake-cursor go-mode)
   "A list of packages to ensure are installed at launch.")
 
 (dolist (p my-packages)
@@ -22,21 +22,16 @@
 ;; Startup Directories
 (add-to-list 'load-path "~/.emacs.d/")
 (add-to-list 'load-path "~/.emacs.d/vendor/")
-(add-to-list 'load-path "~/.emacs.d/vendor/gocode/emacs")
+(add-to-list 'load-path "~/.emacs.d/vendor/gocode/")
+(add-to-list 'load-path "~/.emacs.d/vendor/gocode/emacs/")
 
 ;; Setup Path
 (when (memq window-system '(mac ns))
-  (exec-path-from-shell-initialize))
-
-;; Theme / Font
-;;(add-to-list 'load-path "~/.emacs.d/themes/solarized/")
-;;(add-to-list 'custom-theme-load-path "~/.emacs.d/themes/solarized/")
-(set-frame-font "Monaco-16")
-;;(load-theme 'solarized-light)
+  (exec-path-from-shell-initialize)
+  (set-frame-font "Monaco-16"))
 
 ;; JS Dev settings : Load improved js2-mode : https://github.com/mooz/js2-mode
 (require 'js-settings)
-
 
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
