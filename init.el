@@ -12,26 +12,88 @@
 
 (defvar my-packages '(starter-kit-eshell auto-complete paredit
   idle-highlight-mode find-file-in-project smex ido-ubiquitous magit yasnippet
-   solarized-theme exec-path-from-shell flymake-jslint flymake-cursor go-mode)
+   solarized-theme exec-path-from-shell flymake-jslint flymake-cursor go-mode
+   ipython magit speedbar)
   "A list of packages to ensure are installed at launch.")
 
 (dolist (p my-packages)
   (when (not (package-installed-p p))
     (package-install p)))
 
+
+
 ;; Startup Directories
 (add-to-list 'load-path "~/.emacs.d/")
 (add-to-list 'load-path "~/.emacs.d/vendor/")
 (add-to-list 'load-path "~/.emacs.d/vendor/gocode/")
 (add-to-list 'load-path "~/.emacs.d/vendor/gocode/emacs/")
+(add-to-list 'load-path "~/.emacs.d/vendor/python-mode.el-6.1.1/")
+(add-to-list 'load-path "~/.emacs.d/el-get/el-get")
+
 
 ;; Setup Path
 (when (memq window-system '(mac ns))
   (exec-path-from-shell-initialize)
   (set-frame-font "Monaco-16"))
 
+;; el-get
+(unless (require 'el-get nil 'noerror)
+  (with-current-buffer
+      (url-retrieve-synchronously
+       "https://raw.github.com/dimitri/el-get/master/el-get-install.el")
+    (goto-char (point-max))
+    (eval-print-last-sexp)))
+
+(add-to-list 'el-get-recipe-path "~/.emacs.d/el-get-user/recipes")
+(el-get 'sync)
+(setq el-get-user-package-directory "~/.emacs.d/el-get-init-files/")
+
+(require 'sr-speedbar)
+
+(require 'magit)
 ;; JS Dev settings : Load improved js2-mode : https://github.com/mooz/js2-mode
 (require 'js-settings)
+
+;; Python Dev settings. Move to external file.
+(require 'python)
+(require 'python-mode)
+(require 'ipython)
+(setq auto-mode-alist (cons '("\\.py$" . python-mode) auto-mode-alist))
+(setq interpreter-mode-alist (cons '("python" . python-mode)
+                                   interpreter-mode-alist))
+(autoload 'python-mode "python-mode" "Python editing mode." t)
+(defun annotate-pdb ()
+  (interactive)
+  (highlight-lines-matching-regexp "import i?pdb")
+  (highlight-lines-matching-regexp "i?pdb.set_trace()"))
+(add-hook 'python-mode-hook 'annotate-pdb)
+;; Set python to tabs, for you Anthony!
+(add-hook 'python-mode-hook
+	  (lambda ()
+                (setq indent-tabs-mode t)
+		(setq python-indent 4)
+                (setq tab-width 4)))
+
+;; Initialize Pymacs
+;;(setq py-load-pymacs nil)
+(autoload 'pymacs-apply "pymacs")
+(autoload 'pymacs-call "pymacs")
+(autoload 'pymacs-eval "pymacs" nil t)
+(autoload 'pymacs-exec "pymacs" nil t)
+(autoload 'pymacs-load "pymacs" nil t)
+;; Initialize Rope
+(pymacs-load "ropemacs" "rope-")
+(setq ropemacs-enable-autoimport t)
+(add-hook 'python-mode-hook 'jedi:setup)
+;; Column Marker @ 80
+(require 'column-marker)
+(mapc (lambda (hook)
+        (add-hook hook (lambda () (interactive) (column-marker-1 80))))
+      '(org-mode-hook
+        emacs-lisp-mode-hook
+        python-mode-hook
+        js2-mode-hook
+        text-mode-hook))
 
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
@@ -39,9 +101,12 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(custom-enabled-themes (quote (solarized-light)))
- '(custom-safe-themes (quote ("72cc9ae08503b8e977801c6d6ec17043b55313cda34bcf0e6921f2f04cf2da56" "d2622a2a2966905a5237b54f35996ca6fda2f79a9253d44793cfe31079e3c92b" "117284df029007a8012cae1f01c3156d54a0de4b9f2f381feab47809b8a1caef" "5debeb813b180bd1c3756306cd8c83ac60fda55f85fb27249a0f2d55817e3cab" default)))
+ '(custom-safe-themes (quote ("d677ef584c6dfc0697901a44b885cc18e206f05114c8a3b7fde674fce6180879" "72cc9ae08503b8e977801c6d6ec17043b55313cda34bcf0e6921f2f04cf2da56" "d2622a2a2966905a5237b54f35996ca6fda2f79a9253d44793cfe31079e3c92b" "117284df029007a8012cae1f01c3156d54a0de4b9f2f381feab47809b8a1caef" "5debeb813b180bd1c3756306cd8c83ac60fda55f85fb27249a0f2d55817e3cab" default)))
  '(help-at-pt-display-when-idle (quote (flymake-overlay)) nil (help-at-pt))
- '(help-at-pt-timer-delay 0.9))
+ '(help-at-pt-timer-delay 0.9)
+ '(py-tab-indent nil)
+ '(sr-speedbar-right-side nil)
+ '(sr-speedbar-skip-other-window-p t))
 
 
 ;; emacs-nav http://code.google.com/p/emacs-nav
@@ -128,7 +193,9 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  )
-
+;; Colorize the shell
+(autoload 'ansi-color-for-comint-mode-on "ansi-color" nil t)
+(add-hook 'shell-mode-hook 'ansi-color-for-comint-mode-on)
 ;; Smooth scrolling
 (setq redisplay-dont-pause t
   scroll-margin 1
