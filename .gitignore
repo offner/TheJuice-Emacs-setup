@@ -12,5 +12,4 @@ tfs-settings.el
 .emacs*
 url/
 el-get/
-vendor/
 eshell/
