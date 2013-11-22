@@ -13,7 +13,7 @@
 (defvar my-packages '(starter-kit-eshell auto-complete paredit
   idle-highlight-mode find-file-in-project smex ido-ubiquitous magit yasnippet
    solarized-theme exec-path-from-shell flymake-jslint flymake-cursor go-mode
-   ipython magit speedbar)
+   ipython magit speedbar python-mode pymacs )
   "A list of packages to ensure are installed at launch.")
 
 (dolist (p my-packages)
@@ -63,13 +63,15 @@
 (require 'python-settings)
 ;; Column Marker @ 80
 (require 'column-marker)
+(column-marker-1 80)
 (mapc (lambda (hook)
         (add-hook hook (lambda () (interactive) (column-marker-1 80))))
       '(org-mode-hook
         emacs-lisp-mode-hook
         python-mode-hook
         js2-mode-hook
-        text-mode-hook))
+        text-mode-hook
+		go-mode-hook))
 
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
