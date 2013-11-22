@@ -13,7 +13,7 @@
 (defvar my-packages '(starter-kit-eshell auto-complete paredit
   idle-highlight-mode find-file-in-project smex ido-ubiquitous magit yasnippet
    solarized-theme exec-path-from-shell flymake-jslint flymake-cursor go-mode
-   ipython magit speedbar python-mode pymacs )
+   ipython magit speedbar python-mode dash)
   "A list of packages to ensure are installed at launch.")
 
 (dolist (p my-packages)
@@ -42,7 +42,7 @@
     (eval-print-last-sexp)))
 
 (add-to-list 'el-get-recipe-path "~/.emacs.d/el-get-user/recipes")
-(el-get 'sync)
+(el-get 'sync 'enhanced-ruby-mode 'projectile 'robe 'cl-lib)
 (setq el-get-user-package-directory "~/.emacs.d/el-get-init-files/")
 
 ;; Auto Complete
@@ -55,12 +55,17 @@
 (setq ac-sources (append ac-sources '(ac-source-go)))
 (define-key ac-complete-mode-map "\C-n" 'ac-next) ;;keybind
 (define-key ac-complete-mode-map "\C-p" 'ac-previous) ;;keybind
+(add-to-list 'ac-modes 'enh-ruby-mode)
+(add-to-list 'ac-modes 'web-mode)
+
+;; Projectile
+(projectile-global-mode)
 
 (require 'magit)
 ;; JS Dev settings : Load improved js2-mode : https://github.com/mooz/js2-mode
 (require 'js-settings)
 ;; Python Dev
-(require 'python-settings)
+;(require 'python-settings)
 ;; Column Marker @ 80
 (require 'column-marker)
 (column-marker-1 80)
@@ -107,7 +112,9 @@
   (setq tab-width 4 indent-tabs-mode 1))
 (add-hook 'go-mode-hook 'my-go-mode-hook)
 
-
+;; ruby
+(add-hook 'ruby-mode-hook 'robe-mode)
+(push 'ac-source-robe ac-sources)
 
 ;; YASnippet
 (require 'yasnippet)

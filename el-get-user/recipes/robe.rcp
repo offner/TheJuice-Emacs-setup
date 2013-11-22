@@ -1,0 +1,5 @@
+(:name enhanced-ruby-mode
+       :website "https://github.com/dgutov/robe"
+       :description "robe mode for ruby"
+       :type github
+       :pkgname "dgutov/robe")
