@@ -42,7 +42,7 @@
     (eval-print-last-sexp)))
 
 (add-to-list 'el-get-recipe-path "~/.emacs.d/el-get-user/recipes")
-(el-get 'sync 'enhanced-ruby-mode 'projectile 'robe 'cl-lib)
+(el-get 'sync 'enhanced-ruby-mode 'projectile 'robe 'cl-lib 'yaml-mode)
 (setq el-get-user-package-directory "~/.emacs.d/el-get-init-files/")
 
 ;; Auto Complete
@@ -85,8 +85,10 @@
  ;; If there is more than one, they won't work right.
  '(custom-enabled-themes (quote (solarized-light)))
  '(custom-safe-themes (quote ("d677ef584c6dfc0697901a44b885cc18e206f05114c8a3b7fde674fce6180879" "72cc9ae08503b8e977801c6d6ec17043b55313cda34bcf0e6921f2f04cf2da56" "d2622a2a2966905a5237b54f35996ca6fda2f79a9253d44793cfe31079e3c92b" "117284df029007a8012cae1f01c3156d54a0de4b9f2f381feab47809b8a1caef" "5debeb813b180bd1c3756306cd8c83ac60fda55f85fb27249a0f2d55817e3cab" default)))
+ '(fringe-mode (quote (1 . 1)) nil (fringe))
  '(help-at-pt-display-when-idle (quote (flymake-overlay)) nil (help-at-pt))
  '(help-at-pt-timer-delay 0.9)
+ '(linum-format "%3d ")
  '(py-tab-indent nil))
 
 
@@ -130,6 +132,10 @@
 ;; Mustache Mode! https://github.com/mustache/emacs
 (require 'mustache-mode)
 
+;; YAML
+(require 'yaml-mode)
+    (add-to-list 'auto-mode-alist '("\\.yml" . yaml-mode))
+
 ;; Spell Check - Aspell
 ;;(setq-default ispell-program-name "C:\\Program Files (x86)\\Aspell\\bin\\aspell.exe")
 (setq text-mode-hook '(lambda()
@@ -168,7 +174,8 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(linum ((t (:inherit (shadow default) :background "#fdf6e3" :foreground "#657b83" :weight thin :height 0.75)))))
+ '(default ((t (:inherit nil :stipple nil :background "#fdf6e3" :foreground "#657b83" :inverse-video nil :box nil :strike-through nil :overline nil :underline nil :slant normal :weight normal :height 168 :width normal :foundry "unknown" :family "Ubuntu Mono"))))
+ '(linum ((t (:inherit (shadow default) :background "#fdf6e3" :foreground "#657b83" :weight ultra-light :height 0.25)))))
 
 ;; Colorize the shell
 (autoload 'ansi-color-for-comint-mode-on "ansi-color" nil t)
