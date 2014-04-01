@@ -1,0 +1,6 @@
+(:name enhanced-ruby-mode
+       :website "https://github.com/bbatsov/projectile"
+       :description "projectile project management"
+       :type github
+       :depends (pkg-info)
+       :pkgname "bbatsov/projectile")

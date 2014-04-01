@@ -1,0 +1,5 @@
+(:name enhanced-ruby-mode
+       :website "https://github.com/zenspider/enhanced-ruby-mode"
+       :description "enhanced-ruby-mode"
+       :type github
+       :pkgname "zenspider/enhanced-ruby-mode")
