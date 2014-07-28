@@ -2,15 +2,15 @@
 
 ;; Load Marmalade Package Manager
 (require 'package)
-(setq package-archives
-      '(("marmalade" . "http://marmalade-repo.org/packages/")))
+(add-to-list 'package-archives
+      '("marmalade" . "http://marmalade-repo.org/packages/"))
 (package-initialize)
 
 ;; Package List
 (when (not package-archive-contents)
   (package-refresh-contents))
 
-(defvar my-packages '(starter-kit-eshell auto-complete paredit
+(defvar my-packages '(starter-kit-eshell paredit
   idle-highlight-mode find-file-in-project smex ido-ubiquitous magit yasnippet
    solarized-theme exec-path-from-shell flymake-jslint flymake-cursor go-mode
    ipython magit speedbar python-mode dash)
@@ -21,7 +21,7 @@
     (package-install p)))
 
 ;; Startup Directories
-(add-to-list 'load-path "~/.emacs.d/")
+;;(add-to-list 'load-path "~/.emacs.d/")
 (add-to-list 'load-path "~/.emacs.d/vendor/")
 (add-to-list 'load-path "~/.emacs.d/vendor/gocode/")
 (add-to-list 'load-path "~/.emacs.d/vendor/gocode/emacs/")
@@ -42,7 +42,7 @@
     (eval-print-last-sexp)))
 
 (add-to-list 'el-get-recipe-path "~/.emacs.d/el-get-user/recipes")
-(el-get 'sync 'enhanced-ruby-mode 'projectile 'robe 'cl-lib 'yaml-mode)
+(el-get 'sync 'enhanced-ruby-mode 'projectile 'robe 'yaml-mode 'auto-complete)
 (setq el-get-user-package-directory "~/.emacs.d/el-get-init-files/")
 
 ;; Auto Complete
@@ -63,7 +63,7 @@
 
 (require 'magit)
 ;; JS Dev settings : Load improved js2-mode : https://github.com/mooz/js2-mode
-(require 'js-settings)
+;(require 'js-settings)
 ;; Python Dev
 ;(require 'python-settings)
 ;; Column Marker @ 80
@@ -76,7 +76,7 @@
         python-mode-hook
         js2-mode-hook
         text-mode-hook
-		go-mode-hook))
+	go-mode-hook))
 
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
@@ -88,7 +88,6 @@
  '(fringe-mode (quote (1 . 1)) nil (fringe))
  '(help-at-pt-display-when-idle (quote (flymake-overlay)) nil (help-at-pt))
  '(help-at-pt-timer-delay 0.9)
- '(linum-format "%3d ")
  '(py-tab-indent nil))
 
 
@@ -103,12 +102,12 @@
 (global-set-key "\C-cb" 'org-iswitchb);;keybind
 
 ;; go
-(require 'go-mode-load)
-(require 'go-autocomplete)
-(eval-after-load "go-mode"
-  '(progn
-		 (setq c-indent-level 2)
-     (require 'auto-complete-config)))
+;(require 'go-mode-load)
+;(require 'go-autocomplete)
+;(eval-after-load "go-mode"
+;  '(progn
+;		 (setq c-indent-level 2)
+;     (require 'auto-complete-config)))
 
 (defun my-go-mode-hook ()
   (setq tab-width 4 indent-tabs-mode 1))
@@ -166,16 +165,8 @@
 (setq-default show-trailing-whitespace 1)
 (add-hook 'before-save-hook 'delete-trailing-whitespace)
 (global-linum-mode 1)
-(setq linum-format "%3d")
+(setq linum-format "%3d ")
 (setq whitespace-line-column nil) ;; Disables annoying 80 column font-lock in starter kit
-
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(default ((t (:inherit nil :stipple nil :background "#fdf6e3" :foreground "#657b83" :inverse-video nil :box nil :strike-through nil :overline nil :underline nil :slant normal :weight normal :height 168 :width normal :foundry "unknown" :family "Ubuntu Mono"))))
- '(linum ((t (:inherit (shadow default) :background "#fdf6e3" :foreground "#657b83" :weight ultra-light :height 0.25)))))
 
 ;; Colorize the shell
 (autoload 'ansi-color-for-comint-mode-on "ansi-color" nil t)
