@@ -1,3 +1,4 @@
+*.elc
 auto-save-list/
 auto-save-list/*
 backups/

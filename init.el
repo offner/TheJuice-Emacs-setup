@@ -42,8 +42,14 @@
     (eval-print-last-sexp)))
 
 (add-to-list 'el-get-recipe-path "~/.emacs.d/el-get-user/recipes")
-(el-get 'sync 'enhanced-ruby-mode 'projectile 'robe 'yaml-mode 'auto-complete)
+(el-get 'sync 'enhanced-ruby-mode 'projectile 'robe 'yaml-mode 'auto-complete 'helm)
 (setq el-get-user-package-directory "~/.emacs.d/el-get-init-files/")
+
+;; Helm!
+(require 'helm-config)
+(global-set-key (kbd "C-c h") 'helm-mini)
+(global-set-key (kbd "s-p") 'helm-imenu)
+(helm-mode 1)
 
 ;; Auto Complete
 ;; Setup before language sepcific sections
@@ -60,6 +66,7 @@
 
 ;; Projectile
 (projectile-global-mode)
+(setq projectile-completion-system 'helm)
 
 (require 'magit)
 ;; JS Dev settings : Load improved js2-mode : https://github.com/mooz/js2-mode
@@ -84,8 +91,11 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(custom-enabled-themes (quote (solarized-light)))
- '(custom-safe-themes (quote ("d677ef584c6dfc0697901a44b885cc18e206f05114c8a3b7fde674fce6180879" "72cc9ae08503b8e977801c6d6ec17043b55313cda34bcf0e6921f2f04cf2da56" "d2622a2a2966905a5237b54f35996ca6fda2f79a9253d44793cfe31079e3c92b" "117284df029007a8012cae1f01c3156d54a0de4b9f2f381feab47809b8a1caef" "5debeb813b180bd1c3756306cd8c83ac60fda55f85fb27249a0f2d55817e3cab" default)))
+ '(custom-safe-themes
+   (quote
+    ("d677ef584c6dfc0697901a44b885cc18e206f05114c8a3b7fde674fce6180879" "72cc9ae08503b8e977801c6d6ec17043b55313cda34bcf0e6921f2f04cf2da56" "d2622a2a2966905a5237b54f35996ca6fda2f79a9253d44793cfe31079e3c92b" "117284df029007a8012cae1f01c3156d54a0de4b9f2f381feab47809b8a1caef" "5debeb813b180bd1c3756306cd8c83ac60fda55f85fb27249a0f2d55817e3cab" default)))
  '(fringe-mode (quote (1 . 1)) nil (fringe))
+ '(helm-mode t)
  '(help-at-pt-display-when-idle (quote (flymake-overlay)) nil (help-at-pt))
  '(help-at-pt-timer-delay 0.9)
  '(py-tab-indent nil))
@@ -181,3 +191,17 @@
 (setq mouse-wheel-scroll-amount '(1 ((shift) . 1))) ;; one line at a time
 (setq mouse-wheel-progressive-speed nil) ;; don't accelerate scrolling
 ;;(setq mouse-wheel-follow-mouse 't) ;; scroll window under mouse
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(default ((t (:inherit nil :stipple nil :background "#303030" :foreground "#c6c6c6" :inverse-video nil :box nil :strike-through nil :overline nil :underline nil :slant normal :weight normal :height 160 :width normal :foundry "nil" :family "Source Code Pro")))))
+
+;; Enable theme
+;;customize theme
+(add-to-list 'custom-theme-load-path "~/.emacs.d/themes/moe-theme.el/")
+(add-to-list 'load-path "~/.emacs.d/themes/moe-theme.el/")
+(require 'moe-theme)
+(moe-dark)
+(moe-theme-set-color 'orange)
