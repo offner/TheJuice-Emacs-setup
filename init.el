@@ -1,172 +1,23 @@
-(require 'cl)
-
-;; Load Marmalade Package Manager
 (require 'package)
-(add-to-list 'package-archives
-      '("marmalade" . "http://marmalade-repo.org/packages/"))
+(add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
 (package-initialize)
 
 ;; Package List
 (when (not package-archive-contents)
   (package-refresh-contents))
 
-(defvar my-packages '(starter-kit-eshell paredit
-  idle-highlight-mode find-file-in-project smex ido-ubiquitous magit yasnippet
-   solarized-theme exec-path-from-shell flymake-jslint flymake-cursor go-mode
-   ipython magit speedbar python-mode dash)
-  "A list of packages to ensure are installed at launch.")
+(defvar my-packages '(moe-theme)
+  "A list of packages to install at launch.")
 
 (dolist (p my-packages)
   (when (not (package-installed-p p))
     (package-install p)))
 
-;; Startup Directories
-;;(add-to-list 'load-path "~/.emacs.d/")
-(add-to-list 'load-path "~/.emacs.d/vendor/")
-(add-to-list 'load-path "~/.emacs.d/vendor/gocode/")
-(add-to-list 'load-path "~/.emacs.d/vendor/gocode/emacs/")
-(add-to-list 'load-path "~/.emacs.d/vendor/python-mode.el-6.1.1/")
-(add-to-list 'load-path "~/.emacs.d/el-get/el-get")
-
-(when (memq window-system '(mac ns))
-  ;; Setup Path
-  (exec-path-from-shell-initialize)
-  (set-frame-font "Monaco-16"))
-
-;; el-get
-(unless (require 'el-get nil 'noerror)
-  (with-current-buffer
-      (url-retrieve-synchronously
-       "https://raw.github.com/dimitri/el-get/master/el-get-install.el")
-    (goto-char (point-max))
-    (eval-print-last-sexp)))
-
-(add-to-list 'el-get-recipe-path "~/.emacs.d/el-get-user/recipes")
-(el-get 'sync 'enhanced-ruby-mode 'projectile 'robe 'yaml-mode 'auto-complete 'helm)
-(setq el-get-user-package-directory "~/.emacs.d/el-get-init-files/")
-
-;; Helm!
-(require 'helm-config)
-(global-set-key (kbd "C-c h") 'helm-mini)
-(global-set-key (kbd "s-p") 'helm-imenu)
-(helm-mode 1)
-
-;; Auto Complete
-;; Setup before language sepcific sections
-(require 'auto-complete-config)
-(ac-config-default)
-(global-auto-complete-mode t)
-(setq ac-auto-start 2)
-(setq ac-ignore-case nil)
-(setq ac-sources (append ac-sources '(ac-source-go)))
-(define-key ac-complete-mode-map "\C-n" 'ac-next) ;;keybind
-(define-key ac-complete-mode-map "\C-p" 'ac-previous) ;;keybind
-(add-to-list 'ac-modes 'enh-ruby-mode)
-(add-to-list 'ac-modes 'web-mode)
-
-;; Projectile
-(projectile-global-mode)
-(setq projectile-completion-system 'helm)
-
-(require 'magit)
-;; JS Dev settings : Load improved js2-mode : https://github.com/mooz/js2-mode
-;(require 'js-settings)
-;; Python Dev
-;(require 'python-settings)
-;; Column Marker @ 80
-(require 'column-marker)
-(column-marker-1 80)
-(mapc (lambda (hook)
-        (add-hook hook (lambda () (interactive) (column-marker-1 80))))
-      '(org-mode-hook
-        emacs-lisp-mode-hook
-        python-mode-hook
-        js2-mode-hook
-        text-mode-hook
-	go-mode-hook))
-
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(custom-enabled-themes (quote (solarized-light)))
- '(custom-safe-themes
-   (quote
-    ("d677ef584c6dfc0697901a44b885cc18e206f05114c8a3b7fde674fce6180879" "72cc9ae08503b8e977801c6d6ec17043b55313cda34bcf0e6921f2f04cf2da56" "d2622a2a2966905a5237b54f35996ca6fda2f79a9253d44793cfe31079e3c92b" "117284df029007a8012cae1f01c3156d54a0de4b9f2f381feab47809b8a1caef" "5debeb813b180bd1c3756306cd8c83ac60fda55f85fb27249a0f2d55817e3cab" default)))
- '(fringe-mode (quote (1 . 1)) nil (fringe))
- '(helm-mode t)
- '(help-at-pt-display-when-idle (quote (flymake-overlay)) nil (help-at-pt))
- '(help-at-pt-timer-delay 0.9)
- '(py-tab-indent nil))
-
-
-;; emacs-nav http://code.google.com/p/emacs-nav
-;;(require 'nav)
-
-;; Org Mode
-(add-to-list 'auto-mode-alist '("\\.org\\'" . org-mode))
-(add-hook 'org-mode-hook 'turn-on-font-lock) ;;not needed when global-font-lock-mode is on
-(global-set-key "\C-cl" 'org-store-link);;keybind
-(global-set-key "\C-ca" 'org-agenda);;keybind
-(global-set-key "\C-cb" 'org-iswitchb);;keybind
-
-;; go
-;(require 'go-mode-load)
-;(require 'go-autocomplete)
-;(eval-after-load "go-mode"
-;  '(progn
-;		 (setq c-indent-level 2)
-;     (require 'auto-complete-config)))
-
-(defun my-go-mode-hook ()
-  (setq tab-width 4 indent-tabs-mode 1))
-(add-hook 'go-mode-hook 'my-go-mode-hook)
-
-;; ruby
-(add-hook 'ruby-mode-hook 'robe-mode)
-(push 'ac-source-robe ac-sources)
-
-;; YASnippet
-(require 'yasnippet)
-(yas/initialize)
-;; Load the snippet files themselves
-(yas/load-directory "~/.emacs.d/elpa/yasnippet-0.6.1/snippets/text-mode")
-;; Let's have snippets in the auto-complete dropdown
-(add-to-list 'ac-sources 'ac-source-yasnippet)
-
-;; Set nxml-mode for .config files
-(add-to-list 'auto-mode-alist '("\\.config\\'" . nxml-mode))
-
-;; Mustache Mode! https://github.com/mustache/emacs
-(require 'mustache-mode)
-
-;; YAML
-(require 'yaml-mode)
-    (add-to-list 'auto-mode-alist '("\\.yml" . yaml-mode))
-
-;; Spell Check - Aspell
-;;(setq-default ispell-program-name "C:\\Program Files (x86)\\Aspell\\bin\\aspell.exe")
-(setq text-mode-hook '(lambda()
-                        (flyspell-mode t)       ; spellchek (sic) on the fly
-                        ))
-
-;; Backup Settings
-(setq backup-directory-alist
-      `((".*" . ,temporary-file-directory)))
-(setq auto-save-file-name-transforms
-      `((".*" ,temporary-file-directory t)))
-(message "Deleting old backup files...")
-(let ((week (* 60 60 24 7))
-      (current (float-time (current-time))))
-  (dolist (file (directory-files temporary-file-directory t))
-    (when (and (backup-file-name-p file)
-               (> (- current (float-time (fifth (file-attributes file))))
-                  week))
-      (message file)
-      (delete-file file))))
-
 ;; General Settings
+(setq mac-command-modifier 'super)
+(setq mac-right-option-modifier 'meta)
+(setq mac-option-key-is-meta t)
+(setq mac-option-modifier 'meta)
 (desktop-save-mode 1)
 (delete-selection-mode 1)
 (global-hi-lock-mode 1)
@@ -174,34 +25,34 @@
 ;; Show whitespace, remove on save
 (setq-default show-trailing-whitespace 1)
 (add-hook 'before-save-hook 'delete-trailing-whitespace)
-(global-linum-mode 1)
-(setq linum-format "%3d ")
+;;(global-linum-mode 1)
+;;(setq linum-format "%3d ")
 (setq whitespace-line-column nil) ;; Disables annoying 80 column font-lock in starter kit
+(when (version<= "26.0.50" emacs-version )
+  (global-display-line-numbers-mode))
 
-;; Colorize the shell
-(autoload 'ansi-color-for-comint-mode-on "ansi-color" nil t)
-(add-hook 'shell-mode-hook 'ansi-color-for-comint-mode-on)
-
-;; Smooth scrolling
-(setq redisplay-dont-pause t
-  scroll-margin 1
-  scroll-step 1
-  scroll-conservatively 10000
-  scroll-preserve-screen-position 1)
-(setq mouse-wheel-scroll-amount '(1 ((shift) . 1))) ;; one line at a time
-(setq mouse-wheel-progressive-speed nil) ;; don't accelerate scrolling
-;;(setq mouse-wheel-follow-mouse 't) ;; scroll window under mouse
+;; Custom stuff set through UI
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(package-selected-packages (quote (moe-theme))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(default ((t (:inherit nil :stipple nil :background "#303030" :foreground "#c6c6c6" :inverse-video nil :box nil :strike-through nil :overline nil :underline nil :slant normal :weight normal :height 160 :width normal :foundry "nil" :family "Source Code Pro")))))
+ '(default ((t (:inherit nil :stipple nil :background "#303030" :foreground "#c6c6c6" :inverse-video nil :box nil :strike-through nil :overline nil :underline nil :slant normal :weight normal :height 160 :width normal :foundry "nil" :family "Input"))))
+ '(line-number ((t (:background "#4e4e4e" :foreground "#b2b2b2" :weight light :height 90))))
+ '(line-number-current-line ((t (:background "#d7ff5f" :foreground "#3a3a3a" :height 90)))))
 
-;; Enable theme
-;;customize theme
-(add-to-list 'custom-theme-load-path "~/.emacs.d/themes/moe-theme.el/")
-(add-to-list 'load-path "~/.emacs.d/themes/moe-theme.el/")
+
 (require 'moe-theme)
 (moe-dark)
 (moe-theme-set-color 'orange)
+
+
+
+;; JS Notes
+;; tide + induim
